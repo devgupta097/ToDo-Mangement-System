@@ -1,0 +1,120 @@
+<!-- 
+<meta http-equiv="refresh"
+	content="0; URL='/showMyLoginPage'">
+-->
+
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.prg">
+	<head>
+		<!-- Required meta tags -->
+	    <meta charset="utf-8">
+	    <meta name="viewport" content="width=device-width, initial-scale=1">
+	
+	    <!-- Bootstrap CSS -->
+	    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" 
+	    	rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" 
+	    	crossorigin="anonymous">
+	    <link rel="stylesheet" th:href="@{/css/style.css}">
+	    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/js/bootstrap.bundle.min.js"></script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+	    	
+	    <style>
+		
+		table tr td,th
+		{
+			max-width: 260px;
+			overflow:hidden;
+			text-overflow:ellipsis;
+			white-space:nowrap;
+		}
+		
+		body{
+			background-image:url('/images/back3.jpg');
+			background-position:center;
+			background-repeat:no-repeat;
+			/*background-size:1390px 1250px;
+			background-size:1380px 1250px;*/
+			background-size:1370px 1250px;
+		}
+	</style>
+		
+		
+		<title>ToDo Directory</title>
+	</head>
+	<body id="list-task" >
+		<div class="container">
+			<h3 class="heading">ToDo Directory</h3>
+			<hr>
+			
+			
+			
+			<!-- Add a button -->
+			<a th:href="@{/api/showFormForAdd}" class=" btn btn-primary btn-sm mb-3">
+				Add Task
+			</a>
+			
+			<form th:action="@{/api/search}" method="GET" id="search-content">
+				<input type="text" name="theSearchTask" id="input-search"/>
+				<input type="submit" value="Search" class=" btn btn-success btn-sm mb-3" id="search-btn">
+			</form>
+			
+			<div class="dropdown" style="margin-left:87%; margin-top : -4.2%;">
+			    <button type="button" class="btn btn-primary btn-sm mb-3 dropdown-toggle" data-bs-toggle="dropdown">
+			      Filter Task
+			    </button>
+			    <ul class="dropdown-menu"  >
+			      <li><a class="dropdown-item active" href="#" th:href="@{/api/tasks/}"  >All</a></li>
+			      <li><a class="dropdown-item" href="#" th:href="@{/api/tasks/(filterCond=${'Pending'})}" >Pending</a></li>
+			      <li><a class="dropdown-item" href="#" th:href="@{/api/tasks/(filterCond=${'In-Progress'})}" >In-Progress</a></li>
+			      <li><a class="dropdown-item" href="#" th:href="@{/api/tasks/(filterCond=${'Completed'})}" >Completed</a></li>
+			    </ul>
+			 </div>
+			<hr id="down-hr" class="right">		
+			<br><br>
+			
+			<table class="table table-bordered table-striped">
+				<thead class="thead-dark">
+					<tr id="colheading">
+						<th>Task Number</th>
+						<th>Task Name</th>
+						<th sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')">Created By</th>
+						<th>Target Date</th>
+						<th>Status</th>
+						<th id="action-heading">Action</th>
+					</tr>
+				</thead>
+				
+				<tbody>
+					<tr th:each="tempTask,iterator:${tasks}">
+						
+						<td th:text="${iterator.index}+1"/>
+						<td th:text="${tempTask.taskName}"/>
+						<td sec:authorize="hasAnyRole('ROLE_ADMIN','ROLE_MANAGER')" th:text="${tempTask.createdBy}"/>
+						<td th:text="${tempTask.targetDate}"/>
+						<td th:text="${tempTask.status}"/>
+						
+						<td id="btn-content">
+							<!-- Add update button/link -->
+							<a th:href="@{/api/showFormForUpdate(taskId=${tempTask.id})}"
+								class="btn btn-info btn-sm">
+								Update
+							</a>
+							
+							<!-- Add delete button/link -->
+							<a th:href="@{/api/delete(taskId=${tempTask.id})}"
+								class="btn btn-danger btn-sm" onClick="if(!(confirm('Are you sure you want to delete this task?'))) return false">
+								Delete
+							</a>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+			<br>
+			<!-- for logout -->
+			<form th:action="@{/logout}" method="POST">
+				<input type="submit"  value="logout" class="btn btn-primary btn-sm mb-3"/>
+			</form>
+			
+		</div>
+	</body>
+</html>

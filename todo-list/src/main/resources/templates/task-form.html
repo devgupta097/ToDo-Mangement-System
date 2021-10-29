@@ -1,0 +1,90 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+	<head>
+		<title>Add tasks</title>
+		<!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-F3w7mX95PdgyTmZZMECAngseQB83DfGTowi0iMjiWaeVhAn4FJkqJByhZMI3AhiU" crossorigin="anonymous">
+	<link rel="stylesheet" th:href="@{/css/style.css}">	
+	
+	<style>
+		body{
+			background-image:url('../images/back3.jpg');
+			background-position:center;
+			background-repeat:no-repeat;
+			/*background-size:1390px 1250px;
+			background-size:1380px 1250px;*/
+			background-size:1370px 1250px;
+		}
+	</style>
+	</head>
+<body onload="check()" >
+
+<div class="container" id="list-task">
+
+<h3 class="heading">Task Directory</h3>
+<hr>
+
+	<p class="h4 mb-4" id="topheading">New Task</p>
+	
+	<form action="#" th:action="@{/api/add}" th:object="${task}" method="POST">
+	
+	<!-- add hidden form field to handle update -->
+	<input type="hidden" th:field = "*{id}"/ id="taskId">
+	
+	
+	<label> <b>Task Name</b></label>
+	<input type="text" th:field = "*{taskName}" class="form-control mb-4 col-4" placeholder="Task Name">
+	
+	<label> <b>Target Date </b></label>
+	<input th:text="${#temporals.format(localDate,'dd-MMM-yyyy')}" th:field = "*{targetDate}" class="form-control mb-4 col-4" placeholder="DD-MM-YYYY">
+    
+    <label id="status" style="display:none;"> <b>Status </b></label>
+	<select th:field="*{status}"  class="form-control" id="statusDropdown" style="display:none;">
+    	<option th:value="Pending" th:text="Pending"></option>
+    	<option th:value="In-Progress" th:text="In-Progress"></option>
+    	<option th:value="Completed" th:text="Completed"></option>
+	</select>	
+	<br>
+	<hr>
+	
+	<a th:href="@{/api/tasks}" class="link">Back to Task List</a>
+	<button type="submit" class="btn btn-primary col-2" id="add-btn">Add</button>
+	
+	<br>
+	<br>
+	
+	</form>
+	<script type="text/javascript">
+	
+	function check()
+	{
+		var taskId = document.getElementById("taskId").value;
+		
+		if(taskId!=0)
+		{
+			document.getElementById("topheading").innerHTML = "Update Task";
+			document.getElementById('status').style.display='inline-block';
+			document.getElementById('statusDropdown').style.display='inline-block';
+		}
+	}
+	
+	</script>
+
+
+
+
+<br>
+
+
+			
+</div>
+
+
+</body>
+
+</html>
